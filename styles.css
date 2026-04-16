@@ -1,0 +1,186 @@
+/* ===========================
+VARIABLES GLOBALES
+=========================== */
+
+:root{
+
+--color-primario:#1e3a8a;
+--color-secundario:#2563eb;
+--color-texto:#333;
+--espaciado-base:1rem;
+--radio:10px;
+}
+
+
+/* ===========================
+RESET BASICO
+=========================== */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:system-ui, sans-serif;
+color:var(--color-texto);
+line-height:1.6;
+padding:var(--espaciado-base);
+}
+
+
+/* ===========================
+TIPOGRAFIA FLUIDA
+=========================== */
+
+h1{
+font-size:clamp(1.8rem, 2.5vw, 3rem);
+margin-bottom:calc(var(--espaciado-base)*1.5);
+}
+
+h2{
+font-size:clamp(1.3rem,2vw,1.8rem);
+margin-bottom:0.5rem;
+}
+
+.subtitle{
+
+font-size:clamp(1rem,1.5vw,1.3rem);
+}
+
+
+/* ===========================
+SKIP LINK
+=========================== */
+
+.skip-link{
+
+position:absolute;
+top:-40px;
+left:10px;
+background:black;
+color:white;
+padding:8px;
+}
+
+.skip-link:focus{
+
+top:10px;
+}
+
+
+/* ===========================
+LAYOUT GRID PRINCIPAL
+=========================== */
+
+body{
+
+display:grid;
+grid-template-areas:
+
+"header"
+"nav"
+"main"
+"footer";
+gap:calc(var(--espaciado-base)*2);
+}
+
+
+/* asignación de áreas */
+
+.header{ grid-area:header; }
+
+.nav{ grid-area:nav; }
+
+main{ grid-area:main; }
+
+.footer{ grid-area:footer; }
+
+
+/* ===========================
+NAV FLEXBOX
+=========================== */
+
+.nav-list{
+
+display:flex;
+gap:calc(var(--espaciado-base)*2);
+list-style:none;
+}
+
+.nav a{
+
+text-decoration:none;
+color:var(--color-primario);
+font-weight:600;
+}
+
+
+/* ===========================
+GALERIA GRID
+=========================== */
+
+.gallery{
+
+display:grid;
+grid-template-columns:
+
+repeat(auto-fit, minmax(250px,1fr));
+gap:1.5rem;
+}
+
+
+/* ===========================
+CARDS FLEXBOX
+=========================== */
+
+.card{
+
+display:flex;
+flex-direction:column;
+justify-content:center;
+padding:calc(var(--espaciado-base)*1.5);
+border-radius:var(--radio);
+background:#f4f4f4;
+transition:transform 0.3s ease;
+}
+
+.card:hover{
+
+transform:translateY(-5px);
+}
+
+
+
+
+/* ===========================
+MEDIA QUERIES
+=========================== */
+
+@media (max-width:768px){
+
+.nav-list{
+
+flex-direction:column;
+}
+
+}
+
+
+/* ===========================
+DARK MODE
+=========================== */
+
+@media (prefers-color-scheme: dark){
+
+    body{
+    background:#111;
+    color:#eee;
+    }
+
+    .card{
+    background:#222;
+    }
+
+}
