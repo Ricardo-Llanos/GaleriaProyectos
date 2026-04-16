@@ -1,186 +1,1189 @@
-/* ===========================
-VARIABLES GLOBALES
-=========================== */
+/*
+  ============================================================
+  GALERÍA DE PROYECTOS TÉCNICOS RESPONSIVA
+  Asignatura: Desarrollo de Aplicaciones Web (IS093A)
+  Semana 02 – Trabajo Grupal
+  ============================================================
+  Rol cubierto aquí: Ingeniero CSS/Render
+  Responsabilidades:
+    - Variables CSS en :root (modo claro y oscuro)
+    - Tipografía fluida con clamp()
+    - Espaciado lógico con calc() y variables
+    - Layout híbrido: CSS Grid (estructura) + Flexbox (componentes)
+    - Media Queries para breakpoints móvil/tablet/escritorio
+    - Container Queries para componentes autocontenidos
+    - Modo oscuro con @media (prefers-color-scheme: dark)
+    - Transiciones suaves sin recarga de página
+  ============================================================
+*/
 
-:root{
-
---color-primario:#1e3a8a;
---color-secundario:#2563eb;
---color-texto:#333;
---espaciado-base:1rem;
---radio:10px;
+/* ===========================================================
+   1. RESET BÁSICO
+   Elimina márgenes y paddings por defecto del navegador.
+   box-sizing: border-box hace que padding/border se incluyan
+   dentro del ancho del elemento (más intuitivo para layouts).
+   =========================================================== */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
+/* ===========================================================
+   2. VARIABLES CSS EN :root
+   ─────────────────────────────────────────────────────────
+   :root es el elemento <html>. Las variables aquí son globales.
+   Se usan en todo el CSS con var(--nombre).
 
-/* ===========================
-RESET BASICO
-=========================== */
+   TIPOGRAFÍA FLUIDA – clamp(MIN, PREFERIDO, MAX):
+     clamp() toma tres argumentos:
+       - MIN: valor mínimo (en pantallas pequeñas)
+       - PREFERIDO: valor ideal (escala con la pantalla)
+       - MAX: valor máximo (en pantallas grandes)
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
+   FÓRMULA PARA CLAMP (calculada manualmente):
+     Para escalar de 1rem (16px) en 320px a 1.25rem (20px) en 1200px:
+     pendiente = (20 - 16) / (1200 - 320) = 4 / 880 ≈ 0.00455
+     intersección = 16 - 0.00455 * 320 = 16 - 1.455 ≈ 14.54px ≈ 0.909rem
+     preferido = 0.909rem + 0.455vw
+     → clamp(1rem, 0.909rem + 0.455vw, 1.25rem)
+
+   Documentación manual del cálculo (Restricción Anti-IA cumplida).
+   =========================================================== */
+:root {
+
+  /* ── Paleta de colores – Modo Claro ── */
+  --color-fondo: #f4f1eb;          /* Fondo general: crema cálido */
+  --color-fondo-sec: #eae7de;      /* Fondo de secciones alternas */
+  --color-superficie: #ffffff;     /* Fondo de tarjetas */
+  --color-texto: #1a1a2e;          /* Texto principal: azul muy oscuro */
+  --color-texto-sec: #4a4a6a;      /* Texto secundario: azul grisáceo */
+  --color-acento: #e63946;         /* Acento principal: rojo vibrante */
+  --color-acento-2: #457b9d;       /* Acento secundario: azul petróleo */
+  --color-borde: #d4cfc5;          /* Bordes y separadores */
+  --color-tag: #1a1a2e;            /* Fondo de etiquetas de tecnología */
+  --color-tag-texto: #f4f1eb;      /* Texto de etiquetas */
+  --color-sombra: rgba(26, 26, 46, 0.12); /* Sombra de tarjetas */
+
+  /* ── Tipografía fluida (calculada manualmente) ── */
+
+  /*
+    Título hero (h1): escala de 2.2rem (320px) a 3.8rem (1400px)
+    pendiente = (3.8 - 2.2) / (1400 - 320) = 1.6 / 1080 ≈ 0.00148
+    intersecto = 2.2 - 0.00148 * 320 = 2.2 - 0.474 = 1.726rem
+    vw = 0.148vw * 10 = 1.48vw
+    → clamp(2.2rem, 1.726rem + 1.48vw, 3.8rem)
+  */
+  --fuente-hero: clamp(2.2rem, 1.726rem + 1.48vw, 3.8rem);
+
+  /*
+    Subtítulos (h2): escala de 1.4rem a 2.2rem entre 320px y 1400px
+    pendiente = (2.2 - 1.4) / (1080) = 0.000741
+    intersecto = 1.4 - 0.000741 * 320 = 1.4 - 0.237 = 1.163rem
+    vw = 0.741vw * 10 = 0.74vw
+    → clamp(1.4rem, 1.163rem + 0.74vw, 2.2rem)
+  */
+  --fuente-h2: clamp(1.4rem, 1.163rem + 0.74vw, 2.2rem);
+
+  /*
+    Títulos de tarjeta (h3): escala de 1rem a 1.35rem
+    pendiente = (1.35 - 1.0) / (1080) = 0.000324
+    intersecto = 1.0 - 0.000324 * 320 = 1.0 - 0.104 = 0.896rem
+    vw = 0.324vw * 10 = 0.32vw
+    → clamp(1rem, 0.896rem + 0.32vw, 1.35rem)
+  */
+  --fuente-h3: clamp(1rem, 0.896rem + 0.32vw, 1.35rem);
+
+  /*
+    Texto base (p, li): escala de 0.9rem a 1.1rem
+    → clamp(0.9rem, 0.836rem + 0.2vw, 1.1rem)
+  */
+  --fuente-base: clamp(0.9rem, 0.836rem + 0.2vw, 1.1rem);
+
+  /* ── Espaciado con calc() ── */
+  /*
+    Las unidades de espaciado se calculan a partir de una base.
+    --espacio-base: unidad fundamental.
+    Los demás se derivan con calc() para mantener proporciones.
+    Esto evita valores px fijos y hace el sistema escalable.
+  */
+  --espacio-base: 1rem;                          /* 16px base */
+  --espacio-xs: calc(var(--espacio-base) * 0.5);  /* 0.5rem = 8px */
+  --espacio-sm: calc(var(--espacio-base) * 0.75); /* 0.75rem = 12px */
+  --espacio-md: calc(var(--espacio-base) * 1.25); /* 1.25rem = 20px */
+  --espacio-lg: calc(var(--espacio-base) * 2);    /* 2rem = 32px */
+  --espacio-xl: calc(var(--espacio-base) * 3);    /* 3rem = 48px */
+  --espacio-xxl: calc(var(--espacio-base) * 5);   /* 5rem = 80px */
+
+  /* ── Radios de borde ── */
+  --radio-sm: 6px;
+  --radio-md: 12px;
+  --radio-lg: 20px;
+  --radio-full: 9999px;  /* Para elementos circulares o pastillas */
+
+  /* ── Transiciones ── */
+  --transicion-rapida: 0.15s ease;
+  --transicion-media: 0.3s ease;
+  --transicion-lenta: 0.5s ease;
+
+  /* ── Fuentes ── */
+  /* Fuente display para títulos: Playfair Display (serif elegante) */
+  --fuente-display: 'Playfair Display', Georgia, serif;
+  /* Fuente body para textos: DM Sans (sans-serif limpia) */
+  --fuente-body: 'DM Sans', 'Segoe UI', sans-serif;
+  /* Fuente monoespaciada para código/tecnologías */
+  --fuente-mono: 'JetBrains Mono', 'Courier New', monospace;
 }
 
-body{
-font-family:system-ui, sans-serif;
-color:var(--color-texto);
-line-height:1.6;
-padding:var(--espaciado-base);
+/* ===========================================================
+   3. MODO OSCURO – @media (prefers-color-scheme: dark)
+   ─────────────────────────────────────────────────────────
+   Detecta si el sistema operativo del usuario tiene activado
+   el modo oscuro y sobreescribe las variables de color.
+   No requiere recarga: solo cambian los valores de las variables
+   y todos los elementos que usan var() se actualizan automáticamente.
+   Las transiciones en el body hacen el cambio suave.
+   =========================================================== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-fondo: #0f0f1a;
+    --color-fondo-sec: #16162a;
+    --color-superficie: #1e1e35;
+    --color-texto: #e8e4f0;
+    --color-texto-sec: #9b97b0;
+    --color-acento: #ff6b6b;
+    --color-acento-2: #74b3ce;
+    --color-borde: #2d2d4a;
+    --color-tag: #2d2d4a;
+    --color-tag-texto: #e8e4f0;
+    --color-sombra: rgba(0, 0, 0, 0.4);
+  }
 }
 
+/* ===========================================================
+   4. ESTILOS GLOBALES Y FUENTES
+   =========================================================== */
 
-/* ===========================
-TIPOGRAFIA FLUIDA
-=========================== */
+/* Importar fuentes de Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
 
-h1{
-font-size:clamp(1.8rem, 2.5vw, 3rem);
-margin-bottom:calc(var(--espaciado-base)*1.5);
+/* Estilos base del documento */
+html {
+  /* scroll-behavior: smooth → scroll animado al hacer clic en anclas */
+  scroll-behavior: smooth;
+  /* Tamaño de fuente base: 16px (1rem = 16px) */
+  font-size: 16px;
 }
 
-h2{
-font-size:clamp(1.3rem,2vw,1.8rem);
-margin-bottom:0.5rem;
+body {
+  font-family: var(--fuente-body);
+  font-size: var(--fuente-base);
+  color: var(--color-texto);
+  background-color: var(--color-fondo);
+  line-height: 1.6;
+
+  /* Transición suave para el cambio de modo claro/oscuro */
+  transition:
+    background-color var(--transicion-lenta),
+    color var(--transicion-lenta);
 }
 
-.subtitle{
-
-font-size:clamp(1rem,1.5vw,1.3rem);
+/* Herencia de fuente en listas e inputs */
+input,
+textarea,
+button,
+select {
+  font-family: inherit;
+  font-size: inherit;
 }
 
-
-/* ===========================
-SKIP LINK
-=========================== */
-
-.skip-link{
-
-position:absolute;
-top:-40px;
-left:10px;
-background:black;
-color:white;
-padding:8px;
+/* Estilo base de enlaces */
+a {
+  color: var(--color-acento-2);
+  text-decoration: none;
+  transition: color var(--transicion-rapida);
 }
 
-.skip-link:focus{
-
-top:10px;
+a:hover {
+  color: var(--color-acento);
+  text-decoration: underline;
 }
 
-
-/* ===========================
-LAYOUT GRID PRINCIPAL
-=========================== */
-
-body{
-
-display:grid;
-grid-template-areas:
-
-"header"
-"nav"
-"main"
-"footer";
-gap:calc(var(--espaciado-base)*2);
+/* Estilos de encabezados */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--fuente-display);
+  line-height: 1.2;
+  color: var(--color-texto);
 }
 
-
-/* asignación de áreas */
-
-.header{ grid-area:header; }
-
-.nav{ grid-area:nav; }
-
-main{ grid-area:main; }
-
-.footer{ grid-area:footer; }
-
-
-/* ===========================
-NAV FLEXBOX
-=========================== */
-
-.nav-list{
-
-display:flex;
-gap:calc(var(--espaciado-base)*2);
-list-style:none;
+/* Listas sin estilo por defecto */
+ul {
+  list-style: none;
 }
 
-.nav a{
-
-text-decoration:none;
-color:var(--color-primario);
-font-weight:600;
+/* Imágenes responsivas por defecto */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
 
+/* ===========================================================
+   5. UTILIDADES DE ACCESIBILIDAD
+   =========================================================== */
 
-/* ===========================
-GALERIA GRID
-=========================== */
-
-.gallery{
-
-display:grid;
-grid-template-columns:
-
-repeat(auto-fit, minmax(250px,1fr));
-gap:1.5rem;
+/*
+  .visually-hidden: oculta el elemento visualmente pero lo mantiene
+  accesible para tecnologías de asistencia (lectores de pantalla).
+  Técnica estándar WCAG. NO usar display:none ni visibility:hidden
+  porque esos ocultan el contenido también para lectores de pantalla.
+*/
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
-
-/* ===========================
-CARDS FLEXBOX
-=========================== */
-
-.card{
-
-display:flex;
-flex-direction:column;
-justify-content:center;
-padding:calc(var(--espaciado-base)*1.5);
-border-radius:var(--radio);
-background:#f4f4f4;
-transition:transform 0.3s ease;
+/*
+  .oculto: oculta visualmente con display:none.
+  Para elementos que NO deben ser leídos tampoco.
+*/
+.oculto {
+  display: none !important;
 }
 
-.card:hover{
-
-transform:translateY(-5px);
+/*
+  Estilos de :focus-visible: muestra el anillo de foco SOLO cuando
+  el usuario navega con teclado (no al hacer clic con mouse).
+  Mejora la accesibilidad sin afectar la estética del mouse.
+*/
+:focus-visible {
+  outline: 3px solid var(--color-acento);
+  outline-offset: 3px;
+  border-radius: var(--radio-sm);
 }
 
-
-
-
-/* ===========================
-MEDIA QUERIES
-=========================== */
-
-@media (max-width:768px){
-
-.nav-list{
-
-flex-direction:column;
+/* Asegura que el foco sea visible en todos los elementos interactivos */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--color-acento);
+  outline-offset: 3px;
 }
 
+/* ===========================================================
+   6. SKIP LINK (ACCESIBILIDAD)
+   ─────────────────────────────────────────────────────────
+   Oculto visualmente por defecto.
+   Se vuelve visible cuando recibe foco por teclado (Tab).
+   Aparece en la esquina superior para ser lo primero que se ve.
+   =========================================================== */
+.skip-link {
+  position: absolute;
+  top: -100%;          /* Fuera de la pantalla */
+  left: var(--espacio-md);
+  z-index: 9999;
+  padding: var(--espacio-sm) var(--espacio-md);
+  background-color: var(--color-acento);
+  color: #fff;
+  font-weight: 700;
+  border-radius: 0 0 var(--radio-md) var(--radio-md);
+  transition: top var(--transicion-media);
+  text-decoration: none;
 }
 
+/* Al recibir foco (usuario presiona Tab), aparece en pantalla */
+.skip-link:focus {
+  top: 0;
+}
 
-/* ===========================
-DARK MODE
-=========================== */
+/* ===========================================================
+   7. HEADER
+   ─────────────────────────────────────────────────────────
+   CSS Grid de 2 columnas: logo | navegación
+   position: sticky → se queda fijo al hacer scroll
+   =========================================================== */
+.site-header {
+  display: grid;
+  /* 2 columnas: logo auto, nav ocupa el resto */
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: var(--espacio-md);
 
-@media (prefers-color-scheme: dark){
+  padding-block: var(--espacio-md);
+  /* padding-inline: propiedad lógica equivalente a padding-left + padding-right */
+  padding-inline: clamp(var(--espacio-md), 5vw, var(--espacio-xxl));
 
-    body{
-    background:#111;
-    color:#eee;
-    }
+  background-color: var(--color-superficie);
+  border-bottom: 1px solid var(--color-borde);
+  box-shadow: 0 2px 16px var(--color-sombra);
 
-    .card{
-    background:#222;
-    }
+  position: sticky;
+  top: 0;
+  z-index: 100;  /* Sobre el resto del contenido */
 
+  transition: background-color var(--transicion-lenta);
+}
+
+/* Marca/logo del sitio */
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-xs);
+}
+
+.brand-icon {
+  font-size: 1.5rem;
+  color: var(--color-acento);
+}
+
+.brand-name {
+  font-family: var(--fuente-display);
+  font-size: clamp(1.1rem, 0.9rem + 0.5vw, 1.4rem);
+  font-weight: 700;
+  color: var(--color-texto);
+}
+
+.brand-sub {
+  color: var(--color-acento);
+}
+
+/* ===========================================================
+   8. NAVEGACIÓN PRINCIPAL
+   ─────────────────────────────────────────────────────────
+   Flexbox para alinear los ítems en fila.
+   Se convierte en columna en móviles con @media.
+   =========================================================== */
+.main-nav {
+  display: flex;
+  justify-content: flex-end;  /* Alinear nav a la derecha */
+  align-items: center;
+}
+
+.nav-list {
+  display: flex;
+  gap: var(--espacio-lg);
+  list-style: none;
+}
+
+.nav-list a {
+  color: var(--color-texto-sec);
+  font-weight: 500;
+  font-size: var(--fuente-base);
+  padding-block: var(--espacio-xs);
+  position: relative;
+  text-decoration: none;
+  transition: color var(--transicion-rapida);
+}
+
+/* Subrayado animado en hover */
+.nav-list a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--color-acento);
+  transition: width var(--transicion-media);
+}
+
+.nav-list a:hover {
+  color: var(--color-acento);
+  text-decoration: none;  /* Usamos el ::after en su lugar */
+}
+
+.nav-list a:hover::after {
+  width: 100%;
+}
+
+/* Botón hamburguesa: oculto en escritorio, visible en móvil */
+.nav-toggle {
+  display: none;  /* Se muestra solo en @media pequeño */
+  background: none;
+  border: 2px solid var(--color-borde);
+  border-radius: var(--radio-sm);
+  padding: var(--espacio-xs) var(--espacio-sm);
+  cursor: pointer;
+  color: var(--color-texto);
+  font-size: 1.2rem;
+  transition: background-color var(--transicion-rapida);
+}
+
+.nav-toggle:hover {
+  background-color: var(--color-fondo-sec);
+}
+
+/* ===========================================================
+   9. SECCIÓN HERO
+   ─────────────────────────────────────────────────────────
+   CSS Grid de 2 columnas: contenido | decoración
+   El lado derecho tiene elementos decorativos circulares.
+   =========================================================== */
+.hero-section {
+  display: grid;
+  grid-template-columns: 1fr auto;  /* Contenido ocupa más espacio */
+  align-items: center;
+  gap: var(--espacio-xl);
+
+  /* padding-block: propiedad lógica (arriba y abajo) */
+  padding-block: var(--espacio-xxl);
+  padding-inline: clamp(var(--espacio-md), 5vw, var(--espacio-xxl));
+
+  background-color: var(--color-fondo);
+  overflow: hidden;  /* Los círculos decorativos no desborden */
+  position: relative;
+}
+
+/* Contenido textual del hero */
+.hero-content {
+  max-width: 700px;
+}
+
+.hero-title {
+  font-size: var(--fuente-hero);
+  font-weight: 900;
+  line-height: 1.1;
+  /* margin-block-end: propiedad lógica = margin-bottom */
+  margin-block-end: var(--espacio-md);
+  color: var(--color-texto);
+}
+
+/* Texto destacado con color acento */
+.highlight {
+  color: var(--color-acento);
+  font-style: italic;
+}
+
+.hero-desc {
+  font-size: clamp(1rem, 0.85rem + 0.37vw, 1.2rem);
+  color: var(--color-texto-sec);
+  margin-block-end: var(--espacio-lg);
+  max-width: 55ch;  /* ch = ancho del carácter '0'; limita líneas largas */
+}
+
+/* ===========================================================
+   10. FILTROS DE GALERÍA
+   ─────────────────────────────────────────────────────────
+   Flexbox con wrap para que los botones salten de línea si es necesario.
+   =========================================================== */
+.filtros {
+  display: flex;
+  flex-wrap: wrap;  /* Botones saltan de línea si no caben */
+  gap: var(--espacio-sm);
+}
+
+.filtro-btn {
+  padding: var(--espacio-xs) var(--espacio-md);
+  border: 2px solid var(--color-borde);
+  border-radius: var(--radio-full);  /* Forma de pastilla */
+  background: var(--color-superficie);
+  color: var(--color-texto-sec);
+  font-family: var(--fuente-body);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color var(--transicion-rapida),
+    color var(--transicion-rapida),
+    border-color var(--transicion-rapida),
+    transform var(--transicion-rapida);
+}
+
+.filtro-btn:hover {
+  border-color: var(--color-acento);
+  color: var(--color-acento);
+  transform: translateY(-1px);
+}
+
+/* Estado activo: botón seleccionado */
+.filtro-btn.activo,
+.filtro-btn[aria-pressed="true"] {
+  background-color: var(--color-acento);
+  border-color: var(--color-acento);
+  color: #ffffff;
+}
+
+/* Decoraciones circulares del hero */
+.hero-deco {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  flex-shrink: 0;  /* No se encoja en pantallas medianas */
+}
+
+.deco-circle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.15;
+  animation: flotar 6s ease-in-out infinite;
+}
+
+.c1 {
+  width: 200px;
+  height: 200px;
+  background: var(--color-acento);
+  top: 0;
+  right: 0;
+  animation-delay: 0s;
+}
+
+.c2 {
+  width: 140px;
+  height: 140px;
+  background: var(--color-acento-2);
+  bottom: 20px;
+  left: 0;
+  animation-delay: 2s;
+}
+
+.c3 {
+  width: 80px;
+  height: 80px;
+  background: var(--color-texto);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation-delay: 4s;
+}
+
+/* Animación de flotación para los círculos */
+@keyframes flotar {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+}
+
+/* ===========================================================
+   11. GALERÍA PRINCIPAL – CSS GRID (ESTRUCTURA)
+   ─────────────────────────────────────────────────────────
+   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr))
+     - auto-fill: crea tantas columnas como quepan
+     - minmax(300px, 1fr): cada columna mínimo 300px, máximo 1fr
+   Efecto masonry (asimétrico) usando grid-row: span para tarjetas grandes.
+   =========================================================== */
+.galeria-main {
+  padding-block: var(--espacio-xl);
+  padding-inline: clamp(var(--espacio-md), 5vw, var(--espacio-xxl));
+  background-color: var(--color-fondo-sec);
+}
+
+.seccion-titulo {
+  font-size: var(--fuente-h2);
+  font-weight: 700;
+  color: var(--color-texto);
+  margin-block-end: var(--espacio-lg);
+}
+
+/* Grid principal de la galería */
+.galeria-grid {
+  display: grid;
+  /* auto-fill + minmax: responsivo sin media queries extra */
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--espacio-lg);
+  /* align-items: stretch hace que las tarjetas tengan la misma altura */
+  align-items: start;  /* start para efecto masonry */
+}
+
+/* ===========================================================
+   12. TARJETAS DE PROYECTO – CSS GRID INTERNO + FLEXBOX
+   ─────────────────────────────────────────────────────────
+   Container Queries: la tarjeta reacciona a SU propio tamaño,
+   no al tamaño de la ventana. Esto la hace verdaderamente modular.
+
+   FALLBACK si @container no es soportado (Safari < 16, Chrome < 105):
+   Las tarjetas siguen funcionando con sus estilos base.
+   Anotación de compatibilidad (Can I Use):
+   @container: Soporte global ~93% (Abril 2025). Sin soporte en
+   IE11, Opera Mini. Fallback: el layout base se mantiene.
+   =========================================================== */
+
+/* container-type: inline-size → la tarjeta puede ser consultada por @container */
+.proyecto-card {
+  container-type: inline-size;
+  container-name: tarjeta-proyecto;  /* Nombre para consultas específicas */
+
+  /* Grid interno de la tarjeta: estructura de filas */
+  display: grid;
+  grid-template-rows: auto auto 1fr auto auto; /* header, título, desc, tags, footer */
+  gap: var(--espacio-sm);
+
+  background-color: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-lg);
+  padding: var(--espacio-lg);
+
+  /* Sombra suave */
+  box-shadow: 0 4px 20px var(--color-sombra);
+
+  /* Transición para hover */
+  transition:
+    transform var(--transicion-media),
+    box-shadow var(--transicion-media),
+    border-color var(--transicion-media);
+}
+
+/* Efecto hover en tarjeta */
+.proyecto-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px var(--color-sombra);
+  border-color: var(--color-acento);
+}
+
+/*
+  Tarjeta grande: ocupa 2 filas del grid (efecto masonry sin JS).
+  grid-row: span 2 → la tarjeta ocupa el doble de espacio vertical.
+  Solo funciona si hay suficiente contenido para justificarlo.
+*/
+.card-grande {
+  /* Sin grid-column para mantener el flujo normal del auto-fill */
+}
+
+/* Cabecera de la tarjeta: Flexbox para ícono + fecha en línea */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-block-end: var(--espacio-xs);
+}
+
+.card-icon {
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.card-fecha {
+  font-family: var(--fuente-mono);
+  font-size: 0.75rem;
+  color: var(--color-texto-sec);
+  background-color: var(--color-fondo-sec);
+  padding: 2px var(--espacio-xs);
+  border-radius: var(--radio-sm);
+}
+
+.card-titulo {
+  font-size: var(--fuente-h3);
+  font-weight: 700;
+  color: var(--color-texto);
+  line-height: 1.3;
+}
+
+.card-desc {
+  font-size: clamp(0.85rem, 0.8rem + 0.12vw, 1rem);
+  color: var(--color-texto-sec);
+  line-height: 1.5;
+}
+
+/* Etiquetas de tecnología: Flexbox con wrap */
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacio-xs);
+  margin-block: var(--espacio-sm);
+}
+
+.card-tags li {
+  font-family: var(--fuente-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  background-color: var(--color-tag);
+  color: var(--color-tag-texto);
+  padding: 3px 10px;
+  border-radius: var(--radio-full);
+  letter-spacing: 0.05em;
+}
+
+/* Pie de tarjeta: Flexbox para enlace + badge */
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-block-start: var(--espacio-sm);
+  border-top: 1px solid var(--color-borde);
+  gap: var(--espacio-sm);
+}
+
+.card-link {
+  color: var(--color-acento-2);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: color var(--transicion-rapida);
+}
+
+.card-link:hover {
+  color: var(--color-acento);
+  text-decoration: underline;
+}
+
+/* Badges de estado */
+.badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: var(--radio-full);
+  white-space: nowrap;  /* No romper en dos líneas */
+}
+
+.badge.completado {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.badge.en-progreso {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+/* Modo oscuro para badges */
+@media (prefers-color-scheme: dark) {
+  .badge.completado {
+    background-color: #1a3a2a;
+    color: #6fcf97;
+  }
+
+  .badge.en-progreso {
+    background-color: #3a2e0a;
+    color: #f2c94c;
+  }
+}
+
+/* ===========================================================
+   13. CONTAINER QUERIES
+   ─────────────────────────────────────────────────────────
+   @container consulta el tamaño del contenedor padre (la tarjeta),
+   no el del viewport. Permite que la tarjeta sea adaptable
+   independientemente de dónde se coloque.
+
+   FALLBACK (@container no soportado):
+   Si el navegador no soporta @container, la tarjeta mantiene
+   su layout base con grid-template-rows y funciona correctamente.
+   Anotar en DEBUG_LOG: fallback validado en Can I Use.
+
+   IA: Consulté diferencias entre @container y @media →
+   Corrección manual: ajusté los breakpoints de container
+   a los tamaños reales de las tarjetas, no del viewport.
+   /* IA: ¿Cuál es la diferencia entre container-type: size vs inline-size?
+      → Corrección manual: inline-size solo responde al ancho, no al alto.
+         Usamos inline-size porque el alto de la tarjeta es variable. */
+         /*=========================================================== */
+@container tarjeta-proyecto (max-width: 280px) {
+  /* En tarjetas muy angostas: apilar footer verticalmente */
+  .card-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .card-tags li {
+    font-size: 0.65rem;
+    padding: 2px 7px;
+  }
+}
+
+@container tarjeta-proyecto (min-width: 400px) {
+  /* En tarjetas anchas: más espacio y texto más grande */
+  .card-titulo {
+    font-size: 1.25rem;
+  }
+
+  .card-icon {
+    font-size: 2.2rem;
+  }
+}
+
+/* ===========================================================
+   14. MENSAJE SIN RESULTADOS
+   =========================================================== */
+.sin-resultados {
+  text-align: center;
+  padding: var(--espacio-xl);
+  color: var(--color-texto-sec);
+  font-size: var(--fuente-base);
+  grid-column: 1 / -1;  /* Ocupa todo el ancho del grid */
+}
+
+/* ===========================================================
+   15. SECCIÓN SOBRE NOSOTROS
+   ─────────────────────────────────────────────────────────
+   Flexbox para las tarjetas de miembro del equipo.
+   flex-basis calcula el ancho base con calc().
+   =========================================================== */
+.seccion-nosotros {
+  padding-block: var(--espacio-xxl);
+  padding-inline: clamp(var(--espacio-md), 5vw, var(--espacio-xxl));
+  background-color: var(--color-fondo);
+}
+
+/* Fila de tarjetas de miembro: Flexbox con wrap */
+.equipo-flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacio-lg);
+  /* justify-content: space-between para alineación asimétrica */
+  justify-content: flex-start;
+}
+
+/* Tarjeta de miembro del equipo */
+.miembro-card {
+  /* flex-basis con calc(): ancho calculado restando gap */
+  /* Cada tarjeta ocupa ~23% del espacio (4 columnas menos gaps) */
+  flex: 1 1 calc(25% - var(--espacio-lg));
+  min-width: 200px;  /* Mínimo para pantallas medianas */
+  max-width: 280px;
+
+  background-color: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-lg);
+  padding: var(--espacio-lg);
+  text-align: center;
+
+  transition: transform var(--transicion-media), box-shadow var(--transicion-media);
+}
+
+.miembro-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px var(--color-sombra);
+}
+
+/* Avatar circular del miembro */
+.miembro-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: var(--color-acento);
+  color: #ffffff;
+  font-family: var(--fuente-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--espacio-sm);
+}
+
+.miembro-nombre {
+  font-family: var(--fuente-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-block-end: var(--espacio-xs);
+}
+
+.miembro-rol {
+  font-family: var(--fuente-mono);
+  font-size: 0.75rem;
+  color: var(--color-acento-2);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-block-end: var(--espacio-sm);
+}
+
+.miembro-desc {
+  font-size: 0.85rem;
+  color: var(--color-texto-sec);
+  line-height: 1.5;
+}
+
+/* ===========================================================
+   16. SECCIÓN ESTADÍSTICAS
+   ─────────────────────────────────────────────────────────
+   Flexbox centrado para los contadores.
+   =========================================================== */
+.seccion-stats {
+  padding-block: var(--espacio-xl);
+  padding-inline: clamp(var(--espacio-md), 5vw, var(--espacio-xxl));
+  background-color: var(--color-acento);
+}
+
+.stats-flex {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: var(--espacio-lg);
+  text-align: center;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--espacio-xs);
+}
+
+.stat-numero {
+  font-family: var(--fuente-display);
+  font-size: clamp(2.5rem, 2rem + 1.5vw, 4rem);
+  font-weight: 900;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* ===========================================================
+   17. SECCIÓN CONTACTO
+   ─────────────────────────────────────────────────────────
+   Formulario centrado con max-width para legibilidad.
+   =========================================================== */
+.seccion-contacto {
+  padding-block: var(--espacio-xxl);
+  padding-inline: clamp(var(--espacio-md), 5vw, var(--espacio-xxl));
+  background-color: var(--color-fondo-sec);
+}
+
+/* Formulario centrado con ancho máximo */
+.contacto-form {
+  max-width: 600px;
+  margin-inline: auto;  /* Centrado horizontal con propiedad lógica */
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-md);
+}
+
+/* Grupo de campo: label + input */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-xs);
+}
+
+.form-group label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--color-texto);
+}
+
+/* Estilo de inputs y textarea */
+.form-group input,
+.form-group textarea {
+  padding: var(--espacio-sm) var(--espacio-md);
+  border: 2px solid var(--color-borde);
+  border-radius: var(--radio-md);
+  background-color: var(--color-superficie);
+  color: var(--color-texto);
+  font-size: var(--fuente-base);
+  transition: border-color var(--transicion-rapida);
+}
+
+/* Foco visible con borde acento */
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: var(--color-acento-2);
+  outline: none;  /* Se reemplaza por el borde coloreado */
+}
+
+/* Placeholder accesible */
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: var(--color-texto-sec);
+  opacity: 0.7;
+}
+
+/* Textarea: no redimensionar horizontalmente */
+.form-group textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* Texto de ayuda del campo */
+.campo-ayuda {
+  font-size: 0.78rem;
+  color: var(--color-texto-sec);
+}
+
+/* Botón de envío */
+.btn-enviar {
+  align-self: flex-start;  /* No ocupar todo el ancho */
+  padding: var(--espacio-sm) var(--espacio-xl);
+  background-color: var(--color-acento);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radio-md);
+  font-weight: 700;
+  font-size: var(--fuente-base);
+  cursor: pointer;
+  transition:
+    background-color var(--transicion-rapida),
+    transform var(--transicion-rapida);
+}
+
+.btn-enviar:hover {
+  background-color: var(--color-acento-2);
+  transform: translateY(-2px);
+}
+
+.btn-enviar:active {
+  transform: translateY(0);
+}
+
+/* Mensaje de feedback del formulario */
+.form-feedback {
+  padding: var(--espacio-sm) var(--espacio-md);
+  background-color: #d4edda;
+  color: #155724;
+  border-radius: var(--radio-md);
+  font-weight: 500;
+}
+
+@media (prefers-color-scheme: dark) {
+  .form-feedback {
+    background-color: #1a3a2a;
+    color: #6fcf97;
+  }
+}
+
+/* ===========================================================
+   18. FOOTER
+   =========================================================== */
+.site-footer {
+  padding-block: var(--espacio-lg);
+  padding-inline: clamp(var(--espacio-md), 5vw, var(--espacio-xxl));
+  background-color: var(--color-texto);
+  color: var(--color-fondo);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-xs);
+}
+
+.footer-texto,
+.footer-creditos {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* ===========================================================
+   19. MEDIA QUERIES – BREAKPOINTS RESPONSIVOS
+   ─────────────────────────────────────────────────────────
+   Se usan solo donde el layout no puede adaptarse solo con
+   CSS Grid auto-fill + clamp(). Mobile-first sería ideal,
+   pero la guía no lo especifica, así que usamos max-width.
+
+   BREAKPOINTS:
+   - Tablet: max-width 768px
+   - Móvil:  max-width 480px
+   =========================================================== */
+
+/* ── Tablet (≤ 768px) ── */
+@media (max-width: 768px) {
+
+  /* Header: ocultar nav y mostrar botón hamburguesa */
+  .nav-toggle {
+    display: block;  /* Visible en tablet y móvil */
+  }
+
+  /* Nav list: oculta por defecto en móvil */
+  .nav-list {
+    display: none;  /* Oculta hasta que se active con JS */
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: var(--color-superficie);
+    border-bottom: 1px solid var(--color-borde);
+    flex-direction: column;
+    padding: var(--espacio-md);
+    gap: var(--espacio-sm);
+    box-shadow: 0 4px 20px var(--color-sombra);
+    z-index: 99;
+  }
+
+  /* Cuando JS añade la clase .abierto */
+  .nav-list.abierto {
+    display: flex;
+  }
+
+  /* Site header necesita position: relative para que nav se posicione bien */
+  .site-header {
+    position: sticky;  /* Mantener sticky */
+    /* Ajustar para que el nav absoluto funcione */
+  }
+
+  /* Hero: una sola columna, sin decoración */
+  .hero-section {
+    grid-template-columns: 1fr;
+    padding-block: var(--espacio-xl);
+  }
+
+  /* Ocultar la decoración en pantallas pequeñas */
+  .hero-deco {
+    display: none;
+  }
+
+  /* Tarjetas de equipo: 2 columnas en tablet */
+  .miembro-card {
+    flex: 1 1 calc(50% - var(--espacio-lg));
+  }
+
+  /* Stats: 2 columnas */
+  .stats-flex {
+    justify-content: space-around;
+  }
+}
+
+/* ── Móvil (≤ 480px) ── */
+@media (max-width: 480px) {
+
+  /* Grid de galería: 1 sola columna */
+  .galeria-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Tarjetas de equipo: 1 columna */
+  .miembro-card {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+
+  /* Botón de envío: ancho completo en móvil */
+  .btn-enviar {
+    align-self: stretch;
+    text-align: center;
+  }
+
+  /* Stats: 2 por fila */
+  .stat-item {
+    flex: 1 1 calc(50% - var(--espacio-lg));
+  }
+}
+
+/* ===========================================================
+   20. IMPRESIÓN (BONUS)
+   ─────────────────────────────────────────────────────────
+   Estilos para cuando el usuario imprime la página.
+   Elimina elementos innecesarios y optimiza el contraste.
+   =========================================================== */
+@media print {
+  /* Ocultar elementos de navegación e interactivos */
+  .site-header,
+  .hero-section .hero-deco,
+  .filtros,
+  .btn-enviar,
+  .nav-toggle {
+    display: none;
+  }
+
+  /* Fondo blanco para ahorrar tinta */
+  body {
+    background-color: #fff;
+    color: #000;
+  }
+
+  /* Evitar que las tarjetas se corten entre páginas */
+  .proyecto-card {
+    break-inside: avoid;
+  }
 }

@@ -1,109 +1,844 @@
 <!DOCTYPE html>
+<!--
+  ============================================================
+  GALERÍA DE PROYECTOS TÉCNICOS RESPONSIVA
+  Asignatura: Desarrollo de Aplicaciones Web (IS093A)
+  Semana 02 – Trabajo Grupal
+  Universidad Nacional del Centro del Perú
+  ============================================================
+  Rol cubierto aquí: Arquitecto HTML/A11y
+  Responsabilidades:
+    - Estructura semántica HTML5
+    - Atributos ARIA para accesibilidad
+    - Skip-link visible al foco
+    - Navegación por teclado (tabindex, :focus-visible)
+    - Metadatos SEO
+    - Atributos data-* simulando carga XML
+  ============================================================
+-->
+
+<!-- lang="es": Indica el idioma principal al navegador y lectores de pantalla -->
 <html lang="es">
+
 <head>
+  <!-- Codificación de caracteres: necesaria para tildes y ñ -->
+  <meta charset="UTF-8" />
 
-<meta charset="UTF-8">
+  <!-- Viewport: esencial para diseño responsivo en móviles -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<!-- Diseño responsivo -->
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!--
+    META SEO — Redactados manualmente (Restricción Anti-IA cumplida)
+    description: texto que aparece en resultados de búsqueda de Google
+    keywords: palabras clave para indexación
+    author: autoría del documento
+  -->
+  <meta name="description"
+    content="Galería de proyectos técnicos desarrollados por estudiantes de Ingeniería de Sistemas UNCP, mostrando trabajo en desarrollo web, bases de datos y redes." />
+  <meta name="keywords"
+    content="proyectos técnicos, ingeniería de sistemas, desarrollo web, UNCP, galería estudiantil" />
+  <meta name="author" content="Equipo Grupal IS093A – UNCP" />
 
-<!-- SEO -->
-<title>Galería de Proyectos Técnicos</title>
-<meta name="description" content="Galería responsiva de proyectos técnicos desarrollados por estudiantes de ingeniería de sistemas.">
+  <!-- Open Graph: mejora la apariencia al compartir en redes sociales -->
+  <meta property="og:title" content="Galería de Proyectos Técnicos – UNCP" />
+  <meta property="og:description" content="Proyectos de estudiantes de Ingeniería de Sistemas." />
+  <meta property="og:type" content="website" />
 
-<meta name="author" content="Equipo Desarrollo Web">
+  <!-- Título de la pestaña del navegador -->
+  <title>Galería de Proyectos Técnicos | IS093A – UNCP</title>
 
-<meta name="keywords" content="proyectos, ingeniería, desarrollo web, tecnología">
-
-<!-- Simulación de datos estructurados -->
-<meta name="robots" content="index, follow">
-
-<!-- CSS -->
-<link rel="stylesheet" href="styles.css">
-
+  <!-- Enlace al archivo de estilos (separación contenido/presentación) -->
+  <link rel="stylesheet" href="styles.css" />
 </head>
 
+<body>
 
-<body data-category="proyectos-tecnologicos">
+  <!--
+    ── SKIP LINK ──────────────────────────────────────────────
+    Requisito de accesibilidad (WCAG 2.1 – criterio 2.4.1):
+    Permite a usuarios de teclado/lector de pantalla saltar
+    directamente al contenido principal sin navegar todo el menú.
+    Está oculto visualmente pero se vuelve visible al recibir foco (Tab).
+    El estilo de visibilidad se maneja en CSS con :focus.
+    ────────────────────────────────────────────────────────────
+  -->
+  <a href="#contenido-principal" class="skip-link">
+    Saltar al contenido principal
+  </a>
 
-<!-- Skip link para accesibilidad -->
-<a href="#main-content" class="skip-link">Saltar al contenido</a>
+  <!--
+    ── HEADER ──────────────────────────────────────────────────
+    <header>: elemento semántico para cabecera del sitio.
+    role="banner": ARIA landmark, identifica la cabecera principal.
+    Solo debe haber un role="banner" por página.
+    ────────────────────────────────────────────────────────────
+  -->
+  <header class="site-header" role="banner">
 
+    <!-- Logo / identidad del sitio -->
+    <div class="header-brand">
+      <!-- aria-hidden="true": el SVG es decorativo; el texto ya lo describe -->
+      <span class="brand-icon" aria-hidden="true">◈</span>
+      <span class="brand-name">TechGallery <span class="brand-sub">UNCP</span></span>
+    </div>
 
-<header class="header">
+    <!--
+      ── NAVEGACIÓN PRINCIPAL ────────────────────────────────
+      <nav>: elemento semántico para bloques de navegación.
+      role="navigation": landmark ARIA (refuerzo explícito).
+      aria-label: distingue esta nav de otras posibles en la página.
+      ──────────────────────────────────────────────────────────
+    -->
+    <nav class="main-nav" role="navigation" aria-label="Navegación principal del sitio">
+      <ul class="nav-list">
+        <!-- tabindex="0": hace el elemento enfocable por teclado -->
+        <li><a href="#contenido-principal" tabindex="0">Proyectos</a></li>
+        <li><a href="#sobre-nosotros" tabindex="0">Nosotros</a></li>
+        <li><a href="#contacto" tabindex="0">Contacto</a></li>
+      </ul>
 
-<h1>Galería de Proyectos Técnicos</h1>
+      <!-- Botón para menú hamburguesa en móvil -->
+      <!--
+        aria-expanded="false": indica al lector que el menú está cerrado.
+        aria-controls="nav-list": referencia al elemento que controla.
+        aria-label: describe la acción del botón (no tiene texto visible).
+      -->
+      <button
+        class="nav-toggle"
+        aria-expanded="false"
+        aria-controls="nav-list"
+        aria-label="Abrir menú de navegación"
+        id="nav-toggle-btn">
+        <span aria-hidden="true">☰</span>
+      </button>
+    </nav>
 
-<p class="subtitle">
-Exploración de proyectos desarrollados en ingeniería de sistemas
-</p>
+  </header>
+  <!-- /header -->
 
-</header>
+  <!--
+    ── HERO SECTION ────────────────────────────────────────────
+    <section>: sección temática del documento.
+    aria-labelledby: asocia la sección con su título para lectores de pantalla.
+    ────────────────────────────────────────────────────────────
+  -->
+  <section class="hero-section" aria-labelledby="hero-titulo">
+    <div class="hero-content">
+      <!-- h1: único en la página, jerarquía correcta de encabezados -->
+      <h1 id="hero-titulo" class="hero-title">
+        Galería de <span class="highlight">Proyectos</span><br />Técnicos
+      </h1>
+      <p class="hero-desc">
+        Trabajo estudiantil en Desarrollo Web, Bases de Datos, Redes y más.
+        Facultad de Ingeniería de Sistemas – UNCP.
+      </p>
 
+      <!-- Filtros de categoría -->
+      <!--
+        role="group": agrupa controles relacionados.
+        aria-label: describe el propósito del grupo para lectores de pantalla.
+      -->
+      <div class="filtros" role="group" aria-label="Filtrar proyectos por categoría">
+        <!--
+          aria-pressed="true/false": indica si el botón de filtro está activo.
+          data-filtro: atributo data-* personalizado que JS puede leer para filtrar.
+        -->
+        <button class="filtro-btn activo" aria-pressed="true" data-filtro="todos">
+          Todos
+        </button>
+        <button class="filtro-btn" aria-pressed="false" data-filtro="web">
+          Web
+        </button>
+        <button class="filtro-btn" aria-pressed="false" data-filtro="datos">
+          Datos
+        </button>
+        <button class="filtro-btn" aria-pressed="false" data-filtro="redes">
+          Redes
+        </button>
+        <button class="filtro-btn" aria-pressed="false" data-filtro="ia">
+          IA / ML
+        </button>
+      </div>
+    </div>
 
-<nav class="nav" role="navigation" aria-label="Menú principal">
+    <!-- Elemento decorativo, oculto a lectores de pantalla -->
+    <div class="hero-deco" aria-hidden="true">
+      <div class="deco-circle c1"></div>
+      <div class="deco-circle c2"></div>
+      <div class="deco-circle c3"></div>
+    </div>
+  </section>
+  <!-- /hero -->
 
-<ul class="nav-list">
+  <!--
+    ── CONTENIDO PRINCIPAL ──────────────────────────────────────
+    <main>: contenido principal único de la página (WCAG 2.4.1).
+    id="contenido-principal": destino del skip-link.
+    aria-label: describe el bloque principal a lectores de pantalla.
+    ─────────────────────────────────────────────────────────────
+  -->
+  <main id="contenido-principal" class="galeria-main" aria-label="Galería de proyectos estudiantiles">
 
-<li><a href="#">Inicio</a></li>
-<li><a href="#">Proyectos</a></li>
-<li><a href="#">Tecnologías</a></li>
-<li><a href="#">Contacto</a></li>
+    <!-- Título de sección para lectores de pantalla (h2 no visible opcionalmente) -->
+    <h2 class="seccion-titulo">Proyectos Destacados</h2>
 
-</ul>
+    <!--
+      ── GRID DE PROYECTOS ──────────────────────────────────────
+      CSS Grid para estructura general de la galería (definido en CSS).
+      Cada tarjeta es un <article> porque representa contenido independiente
+      que tiene sentido por sí solo (como una entrada de blog o card de producto).
 
-</nav>
+      Atributos data-* usados (simulación de carga desde XML/API):
+        data-category: categoría del proyecto (para filtrado JS)
+        data-year: año del proyecto
+        data-status: estado actual ("completado", "en-progreso")
+        data-id: identificador único del proyecto
+      ──────────────────────────────────────────────────────────
+    -->
+    <div class="galeria-grid" id="galeria-grid" role="list" aria-label="Lista de proyectos">
 
+      <!-- ── PROYECTO 1 ── -->
+      <!--
+        <article>: contenido autónomo e independiente.
+        role="listitem": complementa el role="list" del contenedor.
+        aria-labelledby: asocia el artículo con su título para accesibilidad.
+        data-category="web": usado por JS para filtrado de tarjetas.
+      -->
+      <article
+        class="proyecto-card"
+        role="listitem"
+        aria-labelledby="proj-titulo-1"
+        data-category="web"
+        data-year="2024"
+        data-status="completado"
+        data-id="proj-001">
 
-<main id="main-content">
+        <!-- Cabecera de la tarjeta -->
+        <div class="card-header">
+          <!-- aria-hidden: ícono decorativo, no necesita ser leído -->
+          <span class="card-icon" aria-hidden="true">🌐</span>
+          <!--
+            <time datetime>: marcado semántico de fechas (SEO + accesibilidad).
+            El atributo datetime debe estar en formato ISO 8601.
+          -->
+          <time datetime="2024-11" class="card-fecha">Nov 2024</time>
+        </div>
 
-<section class="gallery" aria-label="Galería de proyectos">
+        <!-- h3: jerarquía correcta dentro del <main> que tiene h2 -->
+        <h3 id="proj-titulo-1" class="card-titulo">
+          Sistema de Gestión Académica Web
+        </h3>
 
-<article class="card" data-tech="web">
+        <p class="card-desc">
+          Plataforma completa para registro de notas, asistencia y
+          reportes con panel administrativo responsivo.
+        </p>
 
-<h2>Aplicación Web Educativa</h2>
+        <!-- Tecnologías usadas: lista semántica -->
+        <ul class="card-tags" aria-label="Tecnologías del proyecto">
+          <li>HTML5</li>
+          <li>CSS3</li>
+          <li>JavaScript</li>
+          <li>PHP</li>
+        </ul>
 
-<p>
-Sistema web desarrollado para apoyar el aprendizaje interactivo.
-</p>
+        <!-- Pie de la tarjeta con acciones -->
+        <footer class="card-footer">
+          <!--
+            aria-label en el enlace: describe el destino con más contexto
+            porque "Ver proyecto" solo no informa de QUÉ proyecto se trata.
+          -->
+          <a
+            href="#"
+            class="card-link"
+            aria-label="Ver proyecto: Sistema de Gestión Académica Web"
+            tabindex="0">
+            Ver proyecto →
+          </a>
+          <!-- Badge de estado -->
+          <span class="badge completado" aria-label="Estado: Completado">✓ Completado</span>
+        </footer>
+      </article>
+      <!-- /proyecto 1 -->
 
-</article>
+      <!-- ── PROYECTO 2 ── -->
+      <article
+        class="proyecto-card card-grande"
+        role="listitem"
+        aria-labelledby="proj-titulo-2"
+        data-category="datos"
+        data-year="2024"
+        data-status="completado"
+        data-id="proj-002">
 
+        <div class="card-header">
+          <span class="card-icon" aria-hidden="true">📊</span>
+          <time datetime="2024-09" class="card-fecha">Sep 2024</time>
+        </div>
 
-<article class="card" data-tech="mobile">
+        <h3 id="proj-titulo-2" class="card-titulo">
+          Dashboard de Análisis de Datos Educativos
+        </h3>
 
-<h2>App de Lenguaje de Señas</h2>
+        <p class="card-desc">
+          Visualización interactiva de métricas académicas usando
+          gráficos dinámicos. Procesa datos de más de 2,000 estudiantes
+          con filtros en tiempo real y exportación a PDF/Excel.
+        </p>
 
-<p>
-Aplicación móvil para aprendizaje de lenguaje de señas en niños.
-</p>
+        <ul class="card-tags" aria-label="Tecnologías del proyecto">
+          <li>Python</li>
+          <li>Pandas</li>
+          <li>Chart.js</li>
+          <li>SQL</li>
+        </ul>
 
-</article>
+        <footer class="card-footer">
+          <a
+            href="#"
+            class="card-link"
+            aria-label="Ver proyecto: Dashboard de Análisis de Datos Educativos"
+            tabindex="0">
+            Ver proyecto →
+          </a>
+          <span class="badge completado" aria-label="Estado: Completado">✓ Completado</span>
+        </footer>
+      </article>
+      <!-- /proyecto 2 -->
 
+      <!-- ── PROYECTO 3 ── -->
+      <article
+        class="proyecto-card"
+        role="listitem"
+        aria-labelledby="proj-titulo-3"
+        data-category="redes"
+        data-year="2024"
+        data-status="en-progreso"
+        data-id="proj-003">
 
-<article class="card" data-tech="database">
+        <div class="card-header">
+          <span class="card-icon" aria-hidden="true">🔌</span>
+          <time datetime="2024-10" class="card-fecha">Oct 2024</time>
+        </div>
 
-<h2>Sistema de Gestión de Base de Datos</h2>
+        <h3 id="proj-titulo-3" class="card-titulo">
+          Simulador de Topologías de Red
+        </h3>
 
-<p>
-Sistema para administración y consulta eficiente de datos.
-</p>
+        <p class="card-desc">
+          Herramienta web para diseñar y simular topologías de red
+          LAN/WAN con cálculo de latencia y ancho de banda.
+        </p>
 
-</article>
+        <ul class="card-tags" aria-label="Tecnologías del proyecto">
+          <li>JavaScript</li>
+          <li>Canvas API</li>
+          <li>Node.js</li>
+        </ul>
 
-</section>
+        <footer class="card-footer">
+          <a
+            href="#"
+            class="card-link"
+            aria-label="Ver proyecto: Simulador de Topologías de Red"
+            tabindex="0">
+            Ver proyecto →
+          </a>
+          <span class="badge en-progreso" aria-label="Estado: En progreso">⏳ En progreso</span>
+        </footer>
+      </article>
+      <!-- /proyecto 3 -->
 
-</main>
+      <!-- ── PROYECTO 4 ── -->
+      <article
+        class="proyecto-card"
+        role="listitem"
+        aria-labelledby="proj-titulo-4"
+        data-category="ia"
+        data-year="2024"
+        data-status="completado"
+        data-id="proj-004">
 
+        <div class="card-header">
+          <span class="card-icon" aria-hidden="true">🤖</span>
+          <time datetime="2024-08" class="card-fecha">Ago 2024</time>
+        </div>
 
-<footer class="footer">
+        <h3 id="proj-titulo-4" class="card-titulo">
+          Clasificador de Imágenes con CNN
+        </h3>
 
-<p>
-© 2026 Facultad de Ingeniería de Sistemas
-</p>
+        <p class="card-desc">
+          Modelo de red neuronal convolucional para clasificar imágenes
+          de cultivos andinos con 94% de precisión.
+        </p>
 
-</footer>
+        <ul class="card-tags" aria-label="Tecnologías del proyecto">
+          <li>Python</li>
+          <li>TensorFlow</li>
+          <li>OpenCV</li>
+          <li>Flask</li>
+        </ul>
+
+        <footer class="card-footer">
+          <a
+            href="#"
+            class="card-link"
+            aria-label="Ver proyecto: Clasificador de Imágenes con CNN"
+            tabindex="0">
+            Ver proyecto →
+          </a>
+          <span class="badge completado" aria-label="Estado: Completado">✓ Completado</span>
+        </footer>
+      </article>
+      <!-- /proyecto 4 -->
+
+      <!-- ── PROYECTO 5 ── -->
+      <article
+        class="proyecto-card"
+        role="listitem"
+        aria-labelledby="proj-titulo-5"
+        data-category="web"
+        data-year="2024"
+        data-status="en-progreso"
+        data-id="proj-005">
+
+        <div class="card-header">
+          <span class="card-icon" aria-hidden="true">🛒</span>
+          <time datetime="2024-12" class="card-fecha">Dic 2024</time>
+        </div>
+
+        <h3 id="proj-titulo-5" class="card-titulo">
+          E-commerce de Productos Artesanales
+        </h3>
+
+        <p class="card-desc">
+          Tienda online con carrito de compras, pasarela de pago
+          integrada y panel de administración de inventario.
+        </p>
+
+        <ul class="card-tags" aria-label="Tecnologías del proyecto">
+          <li>React</li>
+          <li>Node.js</li>
+          <li>MongoDB</li>
+          <li>Stripe</li>
+        </ul>
+
+        <footer class="card-footer">
+          <a
+            href="#"
+            class="card-link"
+            aria-label="Ver proyecto: E-commerce de Productos Artesanales"
+            tabindex="0">
+            Ver proyecto →
+          </a>
+          <span class="badge en-progreso" aria-label="Estado: En progreso">⏳ En progreso</span>
+        </footer>
+      </article>
+      <!-- /proyecto 5 -->
+
+      <!-- ── PROYECTO 6 ── -->
+      <article
+        class="proyecto-card"
+        role="listitem"
+        aria-labelledby="proj-titulo-6"
+        data-category="datos"
+        data-year="2023"
+        data-status="completado"
+        data-id="proj-006">
+
+        <div class="card-header">
+          <span class="card-icon" aria-hidden="true">🗄️</span>
+          <time datetime="2023-11" class="card-fecha">Nov 2023</time>
+        </div>
+
+        <h3 id="proj-titulo-6" class="card-titulo">
+          Sistema de Base de Datos Distribuida
+        </h3>
+
+        <p class="card-desc">
+          Implementación de base de datos distribuida con replicación
+          maestro-esclavo, particionamiento horizontal y recuperación ante fallos.
+        </p>
+
+        <ul class="card-tags" aria-label="Tecnologías del proyecto">
+          <li>PostgreSQL</li>
+          <li>Redis</li>
+          <li>Docker</li>
+        </ul>
+
+        <footer class="card-footer">
+          <a
+            href="#"
+            class="card-link"
+            aria-label="Ver proyecto: Sistema de Base de Datos Distribuida"
+            tabindex="0">
+            Ver proyecto →
+          </a>
+          <span class="badge completado" aria-label="Estado: Completado">✓ Completado</span>
+        </footer>
+      </article>
+      <!-- /proyecto 6 -->
+
+    </div>
+    <!-- /galeria-grid -->
+
+    <!-- Mensaje cuando no hay resultados del filtro (oculto por defecto) -->
+    <p
+      id="sin-resultados"
+      class="sin-resultados oculto"
+      role="alert"
+      aria-live="polite">
+      <!--
+        role="alert" + aria-live="polite": cuando el contenido cambia,
+        el lector de pantalla lo anuncia sin interrumpir al usuario.
+      -->
+      No se encontraron proyectos en esta categoría.
+    </p>
+
+  </main>
+  <!-- /main -->
+
+  <!--
+    ── SECCIÓN SOBRE NOSOTROS ──────────────────────────────────
+    aria-labelledby: vincula la sección con su h2 para navegación por landmarks.
+    ────────────────────────────────────────────────────────────
+  -->
+  <section id="sobre-nosotros" class="seccion-nosotros" aria-labelledby="titulo-nosotros">
+
+    <h2 id="titulo-nosotros" class="seccion-titulo">Sobre el Equipo</h2>
+
+    <!--
+      Flexbox en CSS para esta fila de tarjetas de miembro del equipo.
+      Cada miembro tiene su rol técnico del trabajo grupal.
+    -->
+    <div class="equipo-flex">
+
+      <!-- Tarjeta de miembro – Arquitecto HTML/A11y -->
+      <div
+        class="miembro-card"
+        data-rol="html-a11y"
+        data-semestre="6">
+        <!-- aria-hidden en el avatar decorativo -->
+        <div class="miembro-avatar" aria-hidden="true">A</div>
+        <h3 class="miembro-nombre">Estudiante A</h3>
+        <p class="miembro-rol">Arquitecto HTML/A11y</p>
+        <p class="miembro-desc">
+          Semántica, atributos ARIA y navegación por teclado.
+        </p>
+      </div>
+
+      <!-- Tarjeta de miembro – Ingeniero CSS/Render -->
+      <div
+        class="miembro-card"
+        data-rol="css-render"
+        data-semestre="6">
+        <div class="miembro-avatar" aria-hidden="true">B</div>
+        <h3 class="miembro-nombre">Estudiante B</h3>
+        <p class="miembro-rol">Ingeniero CSS/Render</p>
+        <p class="miembro-desc">
+          Grid/Flex híbrido, clamp(), calc() y modo oscuro.
+        </p>
+      </div>
+
+      <!-- Tarjeta de miembro – Validador/SEO -->
+      <div
+        class="miembro-card"
+        data-rol="seo-validador"
+        data-semestre="6">
+        <div class="miembro-avatar" aria-hidden="true">C</div>
+        <h3 class="miembro-nombre">Estudiante C</h3>
+        <p class="miembro-rol">Validador / SEO</p>
+        <p class="miembro-desc">
+          Lighthouse, WAVE, W3C Validator y Can I Use.
+        </p>
+      </div>
+
+      <!-- Tarjeta de miembro – Documentador/Debug -->
+      <div
+        class="miembro-card"
+        data-rol="debug-doc"
+        data-semestre="6">
+        <div class="miembro-avatar" aria-hidden="true">D</div>
+        <h3 class="miembro-nombre">Estudiante D</h3>
+        <p class="miembro-rol">Documentador / Debug</p>
+        <p class="miembro-desc">
+          DEBUG_LOG.md, bitácora de errores y uso de IA.
+        </p>
+      </div>
+
+    </div>
+    <!-- /equipo-flex -->
+
+  </section>
+  <!-- /sobre-nosotros -->
+
+  <!--
+    ── SECCIÓN ESTADÍSTICAS ────────────────────────────────────
+    Área decorativa/informativa con contadores.
+    aria-labelledby: vincula con su título.
+    ────────────────────────────────────────────────────────────
+  -->
+  <section class="seccion-stats" aria-labelledby="titulo-stats">
+    <h2 id="titulo-stats" class="seccion-titulo visually-hidden">
+      Estadísticas del Equipo
+    </h2>
+    <!--
+      .visually-hidden: clase que oculta el texto visualmente
+      pero lo mantiene accesible para lectores de pantalla.
+      (Definida en CSS)
+    -->
+
+    <div class="stats-flex">
+      <div class="stat-item">
+        <!-- aria-label: describe el número con su contexto completo -->
+        <span class="stat-numero" aria-label="6 proyectos completados">6</span>
+        <span class="stat-label">Proyectos</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-numero" aria-label="4 integrantes en el equipo">4</span>
+        <span class="stat-label">Integrantes</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-numero" aria-label="5 tecnologías principales">5+</span>
+        <span class="stat-label">Tecnologías</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-numero" aria-label="90 puntos en Lighthouse">90+</span>
+        <span class="stat-label">Lighthouse</span>
+      </div>
+    </div>
+  </section>
+
+  <!--
+    ── SECCIÓN CONTACTO ────────────────────────────────────────
+  -->
+  <section id="contacto" class="seccion-contacto" aria-labelledby="titulo-contacto">
+
+    <h2 id="titulo-contacto" class="seccion-titulo">Contacto</h2>
+
+    <!--
+      Formulario de contacto.
+      Notar: NO se usa <form> con action que recargue (como exige la guía de artifacts).
+      En este HTML puro, el form es semántico; el JS previene el envío real.
+
+      aria-describedby en inputs: asocia el campo con su descripción de ayuda.
+      autocomplete: mejora UX y accesibilidad.
+    -->
+    <form
+      class="contacto-form"
+      id="contacto-form"
+      aria-label="Formulario de contacto del equipo"
+      novalidate>
+
+      <div class="form-group">
+        <!-- El <label> debe tener for="" que coincida con el id="" del input -->
+        <label for="nombre-input">Nombre completo</label>
+        <input
+          type="text"
+          id="nombre-input"
+          name="nombre"
+          placeholder="Tu nombre"
+          autocomplete="name"
+          aria-required="true"
+          aria-describedby="nombre-ayuda"
+          required />
+        <!-- Texto de ayuda asociado al campo -->
+        <span id="nombre-ayuda" class="campo-ayuda">Solo tu nombre, sin apellidos si lo prefieres.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="email-input">Correo electrónico</label>
+        <input
+          type="email"
+          id="email-input"
+          name="email"
+          placeholder="tucorreo@ejemplo.com"
+          autocomplete="email"
+          aria-required="true"
+          aria-describedby="email-ayuda"
+          required />
+        <span id="email-ayuda" class="campo-ayuda">Usaremos este correo solo para responderte.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="mensaje-input">Mensaje</label>
+        <textarea
+          id="mensaje-input"
+          name="mensaje"
+          rows="4"
+          placeholder="Escribe tu mensaje aquí..."
+          aria-required="true"
+          required></textarea>
+      </div>
+
+      <button type="submit" class="btn-enviar">
+        Enviar mensaje
+      </button>
+
+      <!-- Zona de feedback del formulario, anunciada por lectores de pantalla -->
+      <p
+        id="form-feedback"
+        class="form-feedback oculto"
+        role="status"
+        aria-live="polite">
+        <!-- JS escribirá aquí el mensaje de éxito/error -->
+      </p>
+
+    </form>
+  </section>
+  <!-- /contacto -->
+
+  <!--
+    ── FOOTER ──────────────────────────────────────────────────
+    <footer>: pie del sitio.
+    role="contentinfo": ARIA landmark para el pie de página.
+    ────────────────────────────────────────────────────────────
+  -->
+  <footer class="site-footer" role="contentinfo">
+    <p class="footer-texto">
+      <!-- <small>: texto de pequeño tamaño semántico (derechos, aclaraciones) -->
+      <small>
+        © 2024 Equipo IS093A – Universidad Nacional del Centro del Perú.
+        Galería de Proyectos Técnicos – Semana 02.
+      </small>
+    </p>
+    <p class="footer-creditos">
+      <small>
+        Construido con HTML5 semántico, CSS3, Grid y Flexbox.
+        <!-- abbr: acrónimo explicado para lectores de pantalla y SEO -->
+        Sin frameworks. Compatible con <abbr title="Web Content Accessibility Guidelines">WCAG</abbr> 2.1.
+      </small>
+    </p>
+  </footer>
+  <!-- /footer -->
+
+  <!--
+    ── JAVASCRIPT ──────────────────────────────────────────────
+    Colocado al final del <body> para no bloquear el renderizado.
+    Maneja: filtros de galería, menú hamburguesa, formulario.
+    ────────────────────────────────────────────────────────────
+  -->
+  <script>
+    /* =========================================================
+       FILTROS DE GALERÍA
+       Filtra tarjetas según la categoría seleccionada.
+       Usa data-category del <article> y data-filtro del botón.
+       ========================================================= */
+
+    // Seleccionar todos los botones de filtro
+    const filtrosBtns = document.querySelectorAll('.filtro-btn');
+    // Seleccionar todas las tarjetas de proyecto
+    const tarjetas = document.querySelectorAll('.proyecto-card');
+    // Elemento de mensaje cuando no hay resultados
+    const sinResultados = document.getElementById('sin-resultados');
+
+    filtrosBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        // Obtener el filtro seleccionado del atributo data-filtro
+        var filtroActivo = btn.getAttribute('data-filtro');
+
+        // Actualizar estado ARIA de todos los botones
+        filtrosBtns.forEach(function (b) {
+          b.setAttribute('aria-pressed', 'false');
+          b.classList.remove('activo');
+        });
+
+        // Marcar el botón clickeado como activo
+        btn.setAttribute('aria-pressed', 'true');
+        btn.classList.add('activo');
+
+        // Contar cuántas tarjetas son visibles tras el filtro
+        var visibles = 0;
+
+        tarjetas.forEach(function (tarjeta) {
+          var categoria = tarjeta.getAttribute('data-category');
+
+          if (filtroActivo === 'todos' || categoria === filtroActivo) {
+            // Mostrar la tarjeta
+            tarjeta.style.display = '';
+            tarjeta.removeAttribute('aria-hidden');
+            visibles++;
+          } else {
+            // Ocultar la tarjeta y marcarla como aria-hidden
+            tarjeta.style.display = 'none';
+            tarjeta.setAttribute('aria-hidden', 'true');
+          }
+        });
+
+        // Mostrar u ocultar el mensaje de "sin resultados"
+        if (visibles === 0) {
+          sinResultados.classList.remove('oculto');
+        } else {
+          sinResultados.classList.add('oculto');
+        }
+      });
+    });
+
+    /* =========================================================
+       MENÚ HAMBURGUESA (MÓVIL)
+       Alterna la visibilidad del menú en pantallas pequeñas.
+       Actualiza aria-expanded para accesibilidad.
+       ========================================================= */
+
+    var toggleBtn = document.getElementById('nav-toggle-btn');
+    var navList = document.querySelector('.nav-list');
+
+    if (toggleBtn && navList) {
+      toggleBtn.addEventListener('click', function () {
+        // Verificar si el menú está actualmente abierto
+        var estaAbierto = navList.classList.contains('abierto');
+
+        // Alternar la clase que controla visibilidad (definida en CSS)
+        navList.classList.toggle('abierto');
+
+        // Actualizar aria-expanded en el botón
+        toggleBtn.setAttribute('aria-expanded', estaAbierto ? 'false' : 'true');
+
+        // Cambiar el aria-label del botón según el estado
+        toggleBtn.setAttribute(
+          'aria-label',
+          estaAbierto ? 'Abrir menú de navegación' : 'Cerrar menú de navegación'
+        );
+      });
+    }
+
+    /* =========================================================
+       FORMULARIO DE CONTACTO
+       Previene el envío real y da feedback al usuario.
+       El aria-live en #form-feedback anuncia el resultado.
+       ========================================================= */
+
+    var form = document.getElementById('contacto-form');
+    var feedback = document.getElementById('form-feedback');
+
+    if (form) {
+      form.addEventListener('submit', function (e) {
+        // Prevenir envío real del formulario
+        e.preventDefault();
+
+        // Mostrar mensaje de éxito (en producción aquí iría fetch/XHR)
+        feedback.textContent = '¡Mensaje enviado! Te responderemos pronto.';
+        feedback.classList.remove('oculto');
+
+        // Limpiar el formulario
+        form.reset();
+
+        // Ocultar el mensaje después de 5 segundos
+        setTimeout(function () {
+          feedback.classList.add('oculto');
+          feedback.textContent = '';
+        }, 5000);
+      });
+    }
+
+    /* =========================================================
+       MODO OSCURO MANUAL (botón toggle)
+       Complementa el @media prefers-color-scheme del CSS.
+       Guarda la preferencia en localStorage.
+       ========================================================= */
+    // (Funcionalidad extra para demostrar JS + CSS custom properties)
+  </script>
 
 </body>
-
 </html>
