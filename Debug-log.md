@@ -19,9 +19,10 @@ con corrección humana.
 ---
 
 ## ERRORES ENCONTRADOS Y CORRECCIONES MANUALES
+![alt text](image-1.png)
 
 ### ERROR 1 — Contraste insuficiente en badges (WAVE)
-
+![alt text](image.png)
 **Herramienta:** WAVE Web Accessibility Tool  
 **Tipo:** Contraste de color  
 **WCAG:** Criterio 1.4.3 – Contraste mínimo 4.5:1 para texto normal
@@ -112,7 +113,7 @@ El símbolo lleva `aria-hidden="true"` porque el texto de marca ya lo describe.
 ---
 
 ### ERROR 3 — Jerarquía de encabezados incorrecta (WAVE + Lighthouse)
-
+![alt text](image-2.png)
 **Herramienta:** WAVE + Lighthouse (Accesibilidad)  
 **Tipo:** Estructura de encabezados  
 **WCAG:** Criterio 1.3.1 – Información y relaciones
