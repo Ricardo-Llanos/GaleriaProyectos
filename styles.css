@@ -827,8 +827,8 @@ textarea:focus-visible {
   display: flex;
   flex-wrap: wrap;
   gap: var(--espacio-lg);
-  /* justify-content: space-between para alineación asimétrica */
-  justify-content: flex-start;
+  justify-content: space-evenly /*para alineación asimétrica*/
+  /* justify-content: flex-start; */
 }
 
 /* Tarjeta de miembro del equipo */
