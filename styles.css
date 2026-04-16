@@ -1052,7 +1052,8 @@ textarea:focus-visible {
 .site-footer {
   padding-block: var(--espacio-lg);
   padding-inline: clamp(var(--espacio-md), 5vw, var(--espacio-xxl));
-  background-color: var(--color-texto);
+  /* background-color: var(--color-texto); */
+  /* background-color: #1a1a2e; */
   color: var(--color-fondo);
   text-align: center;
   display: flex;

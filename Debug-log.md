@@ -9,7 +9,7 @@
 
 ---
 
-## ¿Qué es este archivo?
+## ¿Qué representa este archivo?
 
 Este archivo registra el proceso de depuración del proyecto: errores encontrados
 durante la validación con herramientas externas, cómo se resolvieron manualmente,
